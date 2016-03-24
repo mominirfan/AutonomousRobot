@@ -2,7 +2,7 @@ import rxtxrobot.*;
 import java.lang.Math; 
 
 public class Main {
-	//paid for motor twice and did not receive
+	//still need to add 160 points back to our budget
 	private static RXTXRobot r; 
 	public static final int PING_PIN  = 8; 
 	public static final int SERVO_1_PIN = 9; 
@@ -12,13 +12,12 @@ public class Main {
 	public static final int ANEM_PIN2 = 4; 
 	public static final int ENCODER_ONe = 10; 
 	public static final int ENCODER_TWO = 11; 
-	//check the git stuff uno mas
 	
 	public static void main(String[] args) 
 	{
 		r = new ArduinoUno(); 
 		r.setPort("COM3");
-		//r.setVerbose(true); // Turn on debugging messages 
+		r.setVerbose(true); // Turn on debugging messages 
 		r.connect();
 		
 		r.refreshAnalogPins();
@@ -31,12 +30,12 @@ public class Main {
 		//sprinkler();
 		//System.out.println(getThermistorReading(THERM_PIN));
 		//System.out.println(getAnemReading());
-		//ping(); 
+		ping(); 
 		//runUntillBump(); 
-//		moveForSeconds(4.0);
-//		turn(2.0, -400, -250); 
-//		ping(); 
-		obstacleRun();
+		moveForSeconds(4.0);
+		turn(2.0, -400, -250); 
+		//ping(); 
+		//obstacleRun();
 		r.close();
 
 	}
@@ -69,7 +68,7 @@ public static void obstacleRun()
 	while(!reachedTarget)
 	{
 		r.refreshDigitalPins();
-		if(r.getPing(PING_PIN) >= 25)
+		if(ping() >= 25)
 		{
 			r.runMotor(RXTXRobot.MOTOR1, 500, RXTXRobot.MOTOR2, -340, 0);
 			System.out.println(r.getPing(PING_PIN));
@@ -159,13 +158,9 @@ public static double getThermistorReading2(int pin) //for the green thermistor
 	return ((sum / readingCount) - 750.902) / (-9.556);
 }
 
-public static void ping()
+public static double ping()
 {
-	for (int x = 0; x < 50; x--)
-	{
-		r.refreshDigitalPins(); 
-		System.out.println(r.getPing(PING_PIN)); 
-	}
+	return r.getPing(PING_PIN); 
 }
 public static void moveForSeconds(double seconds)
 {
