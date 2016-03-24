@@ -30,9 +30,9 @@ public class Main {
 		//sprinkler();
 		//System.out.println(getThermistorReading(THERM_PIN));
 		//System.out.println(getAnemReading());
-		ping(); 
+		//ping(); 
 		//runUntillBump(); 
-		moveForSeconds(4.0);
+		//moveForSeconds(5);
 		turn(2.0, -400, -250); 
 		//ping(); 
 		//obstacleRun();
@@ -164,7 +164,7 @@ public static double ping()
 }
 public static void moveForSeconds(double seconds)
 {
-	r.runMotor(RXTXRobot.MOTOR1, 500, RXTXRobot.MOTOR2, -335, 0);
+	r.runMotor(RXTXRobot.MOTOR1, -350, RXTXRobot.MOTOR2, 500, 0);
 	r.sleep((int)(seconds * 1000)) ;
 	r.runMotor(RXTXRobot.MOTOR1, 0, RXTXRobot.MOTOR2, 0, 0);
 }
