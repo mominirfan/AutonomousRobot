@@ -12,6 +12,7 @@ public class Main {
 	public static final int ANEM_PIN2 = 4; 
 	public static final int ENCODER_ONe = 10; 
 	public static final int ENCODER_TWO = 11; 
+	//check
 	
 	public static void main(String[] args) 
 	{
