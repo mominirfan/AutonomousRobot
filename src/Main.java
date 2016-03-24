@@ -10,6 +10,8 @@ public class Main {
 	public static final int BUMP_PIN = 2;
 	public static final int ANEM_PIN1 = 3; 
 	public static final int ANEM_PIN2 = 4; 
+	public static final int ENCODER_ONe = 10; 
+	public static final int ENCODER_TWO = 11; 
 	
 	public static void main(String[] args) 
 	{
@@ -23,14 +25,17 @@ public class Main {
 		
 		
 		System.out.println(r.getAvailableDigitalPins()); 
-		r.attachServo(RXTXRobot.SERVO1, SERVO_1_PIN);
-		r.moveServo(RXTXRobot.SERVO1, 160);
+		//r.attachServo(RXTXRobot.SERVO1, SERVO_1_PIN);
+		//r.moveServo(RXTXRobot.SERVO1, 160);
 		//sprinkler();
 		//System.out.println(getThermistorReading(THERM_PIN));
 		//System.out.println(getAnemReading());
 		//ping(); 
 		//runUntillBump(); 
-		
+//		moveForSeconds(4.0);
+//		turn(2.0, -400, -250); 
+//		ping(); 
+		obstacleRun();
 		r.close();
 
 	}
@@ -40,6 +45,7 @@ public class Main {
 	@return the average of the 10 results 
 */ 
 	
+
 public static void run()
 {
 	r.moveServo(RXTXRobot.SERVO1, 30);
@@ -48,6 +54,52 @@ public static void run()
 	moveForSeconds(4.80); 
 	r.sleep(2000);
 	runUntillBump();
+	
+}
+
+public static void obstacleRun()
+{
+	r.refreshAnalogPins();
+	boolean reachedTarget = false;
+	int targetVal = 50;
+	r.resetEncodedMotorPosition(RXTXRobot.MOTOR1);
+	int currVal = r.getEncodedMotorPosition(RXTXRobot.MOTOR1);
+	int deltaVal = 0;
+	while(!reachedTarget)
+	{
+		r.refreshDigitalPins();
+		if(r.getPing(PING_PIN) >= 25)
+		{
+			r.runMotor(RXTXRobot.MOTOR1, 500, RXTXRobot.MOTOR2, -340, 0);
+			System.out.println(r.getPing(PING_PIN));
+			currVal = r.getEncodedMotorPosition(RXTXRobot.MOTOR1) - deltaVal;
+			if (currVal == targetVal)
+				reachedTarget = true; 
+		}
+		else
+		{
+			r.runMotor(RXTXRobot.MOTOR1, 0, RXTXRobot.MOTOR2, 0, 0);
+			turn(2.0, -400, -250); 
+			moveForSeconds(1.5);
+			turn(2.0, 400, 250);
+			moveForSeconds(1.5);
+			turn(2.0, 400, 250);
+			moveForSeconds(1.5);
+			turn(2.0, 400, 250); 
+			deltaVal = r.getEncodedMotorPosition(RXTXRobot.MOTOR1) - currVal;
+			if (currVal == targetVal)
+				reachedTarget = true; 
+		}
+	}
+	r.runMotor(RXTXRobot.MOTOR1, 0, RXTXRobot.MOTOR2, 0, 0);
+	System.out.println("You reached your target!");
+	
+}
+public static void turn(double seconds, int speed1, int speed2)
+{
+	r.runMotor(RXTXRobot.MOTOR1, speed1, RXTXRobot.MOTOR2, speed2, 0);
+	r.sleep((int)(seconds * 1000));
+	r.runMotor(RXTXRobot.MOTOR1, 0, RXTXRobot.MOTOR2, 0, 0);
 	
 }
 
@@ -116,7 +168,7 @@ public static void ping()
 }
 public static void moveForSeconds(double seconds)
 {
-	r.runMotor(RXTXRobot.MOTOR1, 500, RXTXRobot.MOTOR2, -500, 0);
+	r.runMotor(RXTXRobot.MOTOR1, 500, RXTXRobot.MOTOR2, -335, 0);
 	r.sleep((int)(seconds * 1000)) ;
 	r.runMotor(RXTXRobot.MOTOR1, 0, RXTXRobot.MOTOR2, 0, 0);
 }
@@ -141,11 +193,7 @@ public static double getDistance()
 		sum += reading;
 		System.out.println(reading); 
 	}
-	/*
-	 * y = 791.902 - 9.551x
-	 * (y- 791.902 )/ - 9.551 = x; 
-	 */
-	//Return the average reading
+	
 	double avg = sum / readingCount; 
 	return avg;
 	
